@@ -1,0 +1,10 @@
+.contrasena {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.password {
+  height: 2rem;
+  text-align: center;
+}
