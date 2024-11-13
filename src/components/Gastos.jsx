@@ -11,6 +11,7 @@ import {
   query,
 } from "firebase/firestore";
 import "../css/gastos.css";
+import GastosGrafico from "./GastosGrafico.jsx";
 
 const Gastos = () => {
   const [total, setTotal] = useState(0);
@@ -301,6 +302,7 @@ const Gastos = () => {
           <p className="egreso">Variables ${totals.GVM.toLocaleString()}</p>
         </div>
       </div>
+      <GastosGrafico totals={totals} />
     </div>
   );
 };
