@@ -18,6 +18,7 @@ const Gastos = () => {
   const [reason, setReason] = useState("");
   const [owner, setOwner] = useState("");
   const [type, setType] = useState("income");
+  const [category, setCategory] = useState(""); // Nuevo estado para la categoría
   const [transactions, setTransactions] = useState([]);
   const [totals, setTotals] = useState({
     darioIncome: 0,
@@ -25,6 +26,7 @@ const Gastos = () => {
     darioExpense: 0,
     maluExpense: 0,
   });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   useEffect(() => {
     const q = query(collection(db, "gastos"), orderBy("date", "desc"));
@@ -66,6 +68,7 @@ const Gastos = () => {
       !price ||
       !reason ||
       !owner ||
+      !category ||
       (owner !== "dario" && owner !== "malu")
     ) {
       Toastify({
@@ -86,12 +89,14 @@ const Gastos = () => {
         reason,
         owner,
         type,
+        category, // Guardamos la categoría
         date: serverTimestamp(),
       });
 
       setPrice("");
       setReason("");
       setOwner("");
+      setCategory(""); // Limpiamos la categoría
       setType("income");
 
       Toastify({
@@ -155,6 +160,19 @@ const Gastos = () => {
     }
   };
 
+  const handleSort = (key) => {
+    const direction = sortConfig.direction === "asc" ? "desc" : "asc";
+    setSortConfig({ key, direction });
+
+    const sortedTransactions = [...transactions].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setTransactions(sortedTransactions);
+  };
+
   return (
     <div>
       <h1>${total.toFixed(0)}</h1>
@@ -176,6 +194,14 @@ const Gastos = () => {
           <option value="dario">Dario</option>
           <option value="malu">Malu</option>
         </select>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">Seleccionar razón</option>
+          <option value="+">+</option>
+          <option value="GFM">GFM</option>
+          <option value="GVM">GVM</option>
+          <option value="GFD">GFD</option>
+          <option value="GVD">GVD</option>
+        </select>
         <select value={type} onChange={(e) => setType(e.target.value)}>
           <option value="income">Ingreso</option>
           <option value="expense">Egreso</option>
@@ -186,11 +212,12 @@ const Gastos = () => {
       <table className="table">
         <thead>
           <tr className="categories">
-            <th>Desc.</th>
-            <th>Monto</th>
-            <th>Dueño</th>
-            <th>Tipo</th>
-            <th>Fecha</th>
+            <th onClick={() => handleSort("reason")}>Desc.</th>
+            <th onClick={() => handleSort("price")}>Monto</th>
+            <th onClick={() => handleSort("owner")}>Dueño</th>
+            <th onClick={() => handleSort("type")}>Tipo</th>
+            <th onClick={() => handleSort("category")}>Razón</th>
+            <th onClick={() => handleSort("date")}>Fecha</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -205,6 +232,7 @@ const Gastos = () => {
               </td>
               <td>{transaction.owner}</td>
               <td>{transaction.type === "income" ? "Ingreso" : "Egreso"}</td>
+              <td>{transaction.category}</td>
               <td>
                 {transaction.date
                   ? new Date(transaction.date.seconds * 1000).toLocaleString()
@@ -219,6 +247,7 @@ const Gastos = () => {
           ))}
         </tbody>
       </table>
+
       <div className="total-individual">
         <h2>Totales por tipo y propietario:</h2>
         <div className="detalle">

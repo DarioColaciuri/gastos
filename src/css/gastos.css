@@ -57,3 +57,7 @@ td {
 .egreso {
   color: rgb(104, 14, 14);
 }
+
+.categories {
+  cursor: pointer;
+}
