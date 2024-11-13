@@ -25,6 +25,10 @@ const Gastos = () => {
     maluIncome: 0,
     darioExpense: 0,
     maluExpense: 0,
+    GFM: 0,
+    GVM: 0,
+    GFD: 0,
+    GVD: 0,
   });
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -37,6 +41,10 @@ const Gastos = () => {
       let maluIncome = 0;
       let darioExpense = 0;
       let maluExpense = 0;
+      let GFM = 0;
+      let GVM = 0;
+      let GFD = 0;
+      let GVD = 0;
 
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -53,11 +61,31 @@ const Gastos = () => {
             ? (darioExpense += data.price)
             : (maluExpense += data.price);
         }
+
+        // Cálculo de los totales por categoría
+        if (data.category === "GFM") {
+          GFM += data.price;
+        } else if (data.category === "GVM") {
+          GVM += data.price;
+        } else if (data.category === "GFD") {
+          GFD += data.price;
+        } else if (data.category === "GVD") {
+          GVD += data.price;
+        }
       });
 
       setTransactions(newTransactions);
       setTotal(newTotal);
-      setTotals({ darioIncome, maluIncome, darioExpense, maluExpense });
+      setTotals({
+        darioIncome,
+        maluIncome,
+        darioExpense,
+        maluExpense,
+        GFM,
+        GVM,
+        GFD,
+        GVD,
+      });
     });
 
     return () => unsubscribe();
@@ -175,7 +203,7 @@ const Gastos = () => {
 
   return (
     <div>
-      <h1>${total.toFixed(0)}</h1>
+      <h1>${total.toLocaleString()}</h1>
       <div className="add-transaction">
         <input
           type="number"
@@ -228,7 +256,7 @@ const Gastos = () => {
               <td
                 className={transaction.type === "income" ? "ingreso" : "egreso"}
               >
-                ${transaction.price.toFixed(0)}
+                ${transaction.price.toLocaleString()}
               </td>
               <td>{transaction.owner}</td>
               <td>{transaction.type === "income" ? "Ingreso" : "Egreso"}</td>
@@ -252,13 +280,25 @@ const Gastos = () => {
         <h2>Totales por tipo y propietario:</h2>
         <div className="detalle">
           <h3>Dario</h3>
-          <p className="ingreso">Ingresos ${totals.darioIncome.toFixed(0)}</p>
-          <p className="egreso">Gastos ${totals.darioExpense.toFixed(0)}</p>
+          <p className="ingreso">
+            Ingresos ${totals.darioIncome.toLocaleString()}
+          </p>
+          <p className="egreso">
+            Gastos ${totals.darioExpense.toLocaleString()}
+          </p>
+          <p className="egreso">Fijos ${totals.GFD.toLocaleString()}</p>
+          <p className="egreso">Variables ${totals.GVD.toLocaleString()}</p>
         </div>
         <div className="detalle">
           <h3>Malu</h3>
-          <p className="ingreso">Ingresos ${totals.maluIncome.toFixed(0)}</p>
-          <p className="egreso">Gastos ${totals.maluExpense.toFixed(0)}</p>
+          <p className="ingreso">
+            Ingresos ${totals.maluIncome.toLocaleString()}
+          </p>
+          <p className="egreso">
+            Gastos ${totals.maluExpense.toLocaleString()}
+          </p>
+          <p className="egreso">Fijos ${totals.GFM.toLocaleString()}</p>
+          <p className="egreso">Variables ${totals.GVM.toLocaleString()}</p>
         </div>
       </div>
     </div>
