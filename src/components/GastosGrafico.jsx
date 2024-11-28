@@ -41,6 +41,8 @@ const GastosGrafico = ({ totals }) => {
       "GVM",
       "GFD",
       "GVD",
+      "GPM",
+      "GPD",
     ], // 8 categorías con las etiquetas correspondientes
     datasets: [
       {
@@ -54,6 +56,8 @@ const GastosGrafico = ({ totals }) => {
           totals.GVM,
           totals.GFD,
           totals.GVD,
+          totals.GPM,
+          totals.GPD,
         ], // Datos correspondientes a las 8 categorías
         backgroundColor: [
           "#4caf50",
@@ -64,6 +68,8 @@ const GastosGrafico = ({ totals }) => {
           "#42a5f5",
           "#ffb74d",
           "#ff8a65",
+          "#2196f3",
+          "#64b5f6",
         ], // Colores de las barras
         borderColor: [
           "#388e3c",
@@ -74,6 +80,8 @@ const GastosGrafico = ({ totals }) => {
           "#1565c0",
           "#fb8c00",
           "#f4511e",
+          "#1976d2",
+          "#1e88e5",
         ], // Colores de borde de las barras
         borderWidth: 1,
       },

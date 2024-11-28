@@ -30,6 +30,8 @@ const Gastos = () => {
     GVM: 0,
     GFD: 0,
     GVD: 0,
+    GPM: 0,
+    GPD: 0,
   });
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -42,10 +44,12 @@ const Gastos = () => {
       let maluIncome = 0;
       let darioExpense = 0;
       let maluExpense = 0;
-      let GFM = 0;
-      let GVM = 0;
-      let GFD = 0;
-      let GVD = 0;
+      let GFM = 0,
+        GVM = 0,
+        GFD = 0,
+        GVD = 0,
+        GPM = 0,
+        GPD = 0;
 
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -63,15 +67,27 @@ const Gastos = () => {
             : (maluExpense += data.price);
         }
 
-        // Cálculo de los totales por categoría
-        if (data.category === "GFM") {
-          GFM += data.price;
-        } else if (data.category === "GVM") {
-          GVM += data.price;
-        } else if (data.category === "GFD") {
-          GFD += data.price;
-        } else if (data.category === "GVD") {
-          GVD += data.price;
+        switch (data.category) {
+          case "GFM":
+            GFM += data.price;
+            break;
+          case "GVM":
+            GVM += data.price;
+            break;
+          case "GFD":
+            GFD += data.price;
+            break;
+          case "GVD":
+            GVD += data.price;
+            break;
+          case "GPM":
+            GPM += data.price;
+            break;
+          case "GPD":
+            GPD += data.price;
+            break;
+          default:
+            break;
         }
       });
 
@@ -86,6 +102,8 @@ const Gastos = () => {
         GVM,
         GFD,
         GVD,
+        GPM,
+        GPD,
       });
     });
 
@@ -118,14 +136,14 @@ const Gastos = () => {
         reason,
         owner,
         type,
-        category, // Guardamos la categoría
+        category,
         date: serverTimestamp(),
       });
 
       setPrice("");
       setReason("");
       setOwner("");
-      setCategory(""); // Limpiamos la categoría
+      setCategory("");
       setType("income");
 
       Toastify({
@@ -230,6 +248,8 @@ const Gastos = () => {
           <option value="GVM">GVM</option>
           <option value="GFD">GFD</option>
           <option value="GVD">GVD</option>
+          <option value="GPM">GPM</option>
+          <option value="GPD">GPD</option>
         </select>
         <select value={type} onChange={(e) => setType(e.target.value)}>
           <option value="income">Ingreso</option>
@@ -289,6 +309,7 @@ const Gastos = () => {
           </p>
           <p className="egreso">Fijos ${totals.GFD.toLocaleString()}</p>
           <p className="egreso">Variables ${totals.GVD.toLocaleString()}</p>
+          <p className="egreso">Personales ${totals.GPD.toLocaleString()}</p>
         </div>
         <div className="detalle">
           <h3>Malu</h3>
@@ -300,6 +321,7 @@ const Gastos = () => {
           </p>
           <p className="egreso">Fijos ${totals.GFM.toLocaleString()}</p>
           <p className="egreso">Variables ${totals.GVM.toLocaleString()}</p>
+          <p className="egreso">Personales ${totals.GPM.toLocaleString()}</p>
         </div>
       </div>
       <GastosGrafico totals={totals} />
