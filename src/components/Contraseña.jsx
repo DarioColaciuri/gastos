@@ -8,7 +8,7 @@ const Contraseña = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === "pepito") {
+    if (password === VITE_PASSWORD) {
       navigate("/gastos");
     } else {
       Toastify({
