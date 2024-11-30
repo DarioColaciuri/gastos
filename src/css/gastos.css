@@ -61,3 +61,48 @@ td {
 .categories {
   cursor: pointer;
 }
+
+.total {
+  background-color: black;
+  padding: 1rem;
+  border-radius: 1rem;
+  display: inline-block;
+  transition: all 0.3s ease-in-out;
+  cursor: default;
+  margin-bottom: 0;
+}
+
+.total:hover {
+  background-color: rgb(69, 119, 88);
+}
+
+.dividido {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.dario {
+  background-color: rgb(10, 150, 80);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease-in-out;
+  cursor: default;
+}
+
+.malu {
+  background-color: rgb(116, 12, 185);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease-in-out;
+  cursor: default;
+}
+
+.dario:hover {
+  background-color: rgb(9, 99, 54);
+}
+
+.malu:hover {
+  background-color: rgb(69, 9, 109);
+}
