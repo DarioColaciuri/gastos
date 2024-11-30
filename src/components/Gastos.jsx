@@ -223,6 +223,12 @@ const Gastos = () => {
   return (
     <div>
       <h1>${total.toLocaleString()}</h1>
+      <h2>
+        Dario: ${(totals.darioIncome - totals.darioExpense).toLocaleString()}
+      </h2>
+      <h2>
+        Malu: ${(totals.maluIncome - totals.maluExpense).toLocaleString()}
+      </h2>
       <div className="add-transaction">
         <input
           type="number"
