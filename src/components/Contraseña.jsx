@@ -8,7 +8,7 @@ const Contraseña = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === VITE_PASSWORD) {
+    if (password === import.meta.env.VITE_PASSWORD) {
       navigate("/gastos");
     } else {
       Toastify({
