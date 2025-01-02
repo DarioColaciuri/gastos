@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   orderBy,
   query,
+  getDocs,
 } from "firebase/firestore";
 import "../css/gastos.css";
 import GastosGrafico from "./GastosGrafico.jsx";
@@ -207,6 +208,78 @@ const Gastos = () => {
     }
   };
 
+  const handleDeleteAllTransactions = async () => {
+    const confirmation = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará todas las transacciones y no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar todo",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmation.isConfirmed) {
+      try {
+        const querySnapshot = await getDocs(collection(db, "gastos"));
+
+        // Si no hay documentos en la colección
+        if (querySnapshot.empty) {
+          console.log("No hay transacciones para eliminar.");
+          Toastify({
+            text: "No hay transacciones para eliminar.",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: {
+              background: "linear-gradient(to right, #ff9800, #f57c00)",
+            },
+          }).showToast();
+          return;
+        }
+
+        querySnapshot.forEach(async (doc) => {
+          try {
+            await deleteDoc(doc.ref);
+          } catch (docError) {
+            console.error("Error al eliminar documento:", docError);
+            Toastify({
+              text: "Error al eliminar transacción específica",
+              duration: 3000,
+              gravity: "top",
+              position: "right",
+              style: {
+                background: "linear-gradient(to right, #b00000, #c93d3d)",
+              },
+            }).showToast();
+          }
+        });
+
+        Toastify({
+          text: "Todas las transacciones han sido eliminadas",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          style: {
+            background: "linear-gradient(to right, #4caf50, #81c784)",
+          },
+        }).showToast();
+      } catch (error) {
+        console.error("Error al eliminar las transacciones:", error);
+        Toastify({
+          text: "Error al eliminar todas las transacciones",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          style: {
+            background: "linear-gradient(to right, #b00000, #c93d3d)",
+          },
+        }).showToast();
+      }
+    }
+  };
+
   const handleSort = (key) => {
     const direction = sortConfig.direction === "asc" ? "desc" : "asc";
     setSortConfig({ key, direction });
@@ -265,6 +338,10 @@ const Gastos = () => {
         </select>
         <button onClick={handleAddTransaction}>Agregar Transacción</button>
       </div>
+
+      <button onClick={handleDeleteAllTransactions}>
+        Eliminar todas las transacciones
+      </button>
 
       <table className="table">
         <thead>
